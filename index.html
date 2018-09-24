@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Screen Sharing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdn.webrtc-experiment.com/style.css">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/ajhifddimkapgcifgcodmmfdlknahffk">
+    <!-- for bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- scripts used for screen-sharing -->
+    <script src="https://cdn.webrtc-experiment.com/socket.io.js"> </script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://cdn.webrtc-experiment.com/IceServersHandler.js"></script>
+    <script src="https://cdn.webrtc-experiment.com/getScreenId.js"> </script>
+    <script src="https://cdn.webrtc-experiment.com/CodecsHandler.js"></script>
+    <script src="https://cdn.webrtc-experiment.com/BandwidthHandler.js"></script>
+    <script src="https://cdn.webrtc-experiment.com/screen.js"> </script>
+</head>
+<body>
+    <!-- navbar -->
+    <header>
+        <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form method="post" action="">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Login</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+
+                                <input type="text" name="username" class="form-control validate">
+                                <label data-error="wrong" data-success="right">username</label>
+                            </div>
+                            <div class="md-form mb-4">
+
+                                <input type="password" name="password" class="form-control validate">
+                                <label data-error="wrong" data-success="right">password</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-default">Forget Password</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>Cancel</button>
+                            <button type="submit" class="btn btn-primary" name="login_user">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal fade" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form method="post" action="home.php">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Sign Up</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <input type="text" name="username" class="form-control validate">
+                                <label data-error="wrong" data-success="right">username</label>
+                            </div>
+                            <div class="md-form mb-5">
+                                <input type="email" name="email" class="form-control validate">
+                                <label data-error="wrong" data-success="right">email</label>
+                            </div>
+                            <div class="md-form mb-4">
+                                <input type="password" name="password_1" class="form-control validate">
+                                <label data-error="wrong" data-success="right">password</label>
+                            </div>
+                            <div class="md-form mb-4">
+                                <input type="password" name="password_2" class="form-control validate">
+                                <label data-error="wrong" data-success="right">confirm password</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>Cancel</button>
+                            <button class="btn btn-primary" name="reg_user">Sign up</button>
+                        </div>
+                </form>
+                <p><strong>
+                        <?php if(isset($error)){echo $error;}  ?></strong></p>
+            </div>
+        </div>
+        </div>
+        <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form method="post" action="home.php">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Login</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <input type="text" name="username" class="form-control validate" id="username">
+                                <label data-error="wrong" data-success="right">username</label>
+                            </div>
+                            <div class="md-form mb-4">
+                                <input type="password" name="password" class="form-control validate">
+                                <label data-error="wrong" data-success="right">password</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-default">Forget Password</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>Cancel</button>
+                            <button type="submit" class="btn btn-primary" name="login_user">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container" style="background: rgb(0, 255, 221)">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#myPage">Screen Sharing</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" role="button" aria-pressed="true" data-toggle="modal" data-target="#modalLoginForm">LOGIN</a></li>
+                        <li><a href="#" role="button" aria-pressed="true" data-toggle="modal" data-target="#modalRegisterForm">SIGNUP</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <article>
+        <section class="experiment" id="main_page">
+            <section class="hide-after-join">
+                <input type="text" id="user-name" placeholder="Your Name">
+                <button id="share-screen" class="setup">Share Your Screen</button>
+            </section>
+            <table style="width: 100%;" id="rooms-list" class="hide-after-join"></table>
+            <div id="videos-container"></div>
+        </section>
+    </article>
+
+    <script src="https://cdn.webrtc-experiment.com/commits.js" async> </script>
+    <script src="main.js"></script>
+</body>
+</html>
